@@ -1,0 +1,51 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RequestBotThing" GeneratedClassName="userSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="requestPause" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[channel] is no longer taking requests. BibleThump</Value>
+    </Setting>
+    <Setting Name="requestUnpause" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[channel] is now taking requests! PogChamp</Value>
+    </Setting>
+    <Setting Name="requestCommand" Type="System.String" Scope="User">
+      <Value Profile="(Default)">!request</Value>
+    </Setting>
+    <Setting Name="requestChanged" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[user] has changed their request. (#[requestNumber] in line)</Value>
+    </Setting>
+    <Setting Name="requestAdded" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[user] has requested a song. (#[requestNumber] in line)</Value>
+    </Setting>
+    <Setting Name="requestDisabled" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[user]: [channel] is not taking requests. BibleThump</Value>
+    </Setting>
+    <Setting Name="requestConnected" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Requests are live! PogChamp</Value>
+    </Setting>
+    <Setting Name="requestRemoved" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Request by [user] was removed.</Value>
+    </Setting>
+    <Setting Name="removeCommand" Type="System.String" Scope="User">
+      <Value Profile="(Default)">!remove</Value>
+    </Setting>
+    <Setting Name="newFollow" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Thanks [user] for following! PogChamp</Value>
+    </Setting>
+    <Setting Name="newSub" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Thanks [user] for the sub! PogChamp</Value>
+    </Setting>
+    <Setting Name="newResub" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[user] has resubbed for [amount] months! PogChamp</Value>
+    </Setting>
+    <Setting Name="newHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[user] is now hosting with [amount] viewers! PogChamp</Value>
+    </Setting>
+    <Setting Name="newRaid" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[user] is raiding with [amount] raiders! PogChamp</Value>
+    </Setting>
+    <Setting Name="newDonation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[user] just donated [amount]! PogChamp</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
