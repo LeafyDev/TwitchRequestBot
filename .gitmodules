@@ -1,0 +1,3 @@
+[submodule "TwitchLib.Client"]
+	path = TwitchLib.Client
+	url = https://github.com/TwitchLib/TwitchLib.Client.git
