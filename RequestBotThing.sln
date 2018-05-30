@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestBotThing", "RequestBotThing\RequestBotThing.csproj", "{1E950B0D-C8BD-411B-B3B8-2CFE65AF1CEF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwitchLib.Client", "TwitchLib.Client\TwitchLib.Client\TwitchLib.Client.csproj", "{B1195804-5769-4D90-8005-BA38DCD68CCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{1E950B0D-C8BD-411B-B3B8-2CFE65AF1CEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E950B0D-C8BD-411B-B3B8-2CFE65AF1CEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E950B0D-C8BD-411B-B3B8-2CFE65AF1CEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1195804-5769-4D90-8005-BA38DCD68CCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1195804-5769-4D90-8005-BA38DCD68CCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1195804-5769-4D90-8005-BA38DCD68CCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1195804-5769-4D90-8005-BA38DCD68CCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
