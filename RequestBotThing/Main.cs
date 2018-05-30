@@ -23,7 +23,7 @@ namespace RequestBotThing
 {
     internal partial class Main : Form
     {
-        private const string version = "1.8.1";
+        private const string version = "1.8.2";
         private static bool userDisconnect;
         private bool alertsOn;
         private JoinedChannel mainChannel;
@@ -49,11 +49,9 @@ namespace RequestBotThing
         {
             if (Settings.Default.localVersion != version)
             {
-                var changelog = $"What's new: {version}"
-                                + "- Logger should be thread safe, if the bot crashes with any message other than , please send latest.log BEFORE restarting the bot."
-                                + "- Hydration message now has a ~25% chance of showing, to be more of a secret wink."
-                                + "- Allowed users to add a request while their current request is being played."
-                                + "- Fixed what's new message actually showing for first start of new versions";
+                var changelog = $"What's new: {version}{Environment.NewLine}"
+                                + "- Unpacked the exe to be able to debug library issues."
+                                + "- Fixed capitlization of usernames.";
 
                 MessageBox.Show(changelog.Replace(".-", $".{Environment.NewLine}-"));
                 Settings.Default.localVersion = version;
@@ -135,7 +133,8 @@ namespace RequestBotThing
             }
         }
 
-        private static void OnLog(object sender, OnLogArgs e) => Logger.WriteToFileThreadSafe($"[{e.DateTime:s}] {e.Data}");
+        private static void OnLog(object sender, OnLogArgs e) =>
+            Logger.WriteToFileThreadSafe($"[{e.DateTime:s}] {e.Data}");
 
         // Remove
         private void Button2_Click(object sender, EventArgs e)
@@ -229,7 +228,7 @@ namespace RequestBotThing
         private void Button8_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem item in listView1.Items)
-                if(item.BackColor == Color.GreenYellow)
+                if (item.BackColor == Color.GreenYellow)
                     DelItem(item);
 
             twitchClient.SendMessage(mainChannel,
@@ -258,7 +257,7 @@ namespace RequestBotThing
             if (e.ChatMessage.Message.StartsWith($"{userSettings.Default.requestCommand} ", StringComparison.Ordinal) &&
                 e.ChatMessage.Channel == mainChannel.Channel)
             {
-                var user = e.ChatMessage.Username;
+                var user = e.ChatMessage.DisplayName;
                 var song = e.ChatMessage.Message.Replace($"{userSettings.Default.requestCommand} ", "");
 
                 if (takingRequests)
@@ -266,7 +265,7 @@ namespace RequestBotThing
                     {
                         ChangeSong(row, song);
                         twitchClient.SendMessage(e.ChatMessage.Channel,
-                            userSettings.Default.requestChanged.Parse(e.ChatMessage.Username, mainChannel.Channel,
+                            userSettings.Default.requestChanged.Parse(e.ChatMessage.DisplayName, mainChannel.Channel,
                                 (row + 1).ToString()));
                     }
                     else
@@ -277,12 +276,12 @@ namespace RequestBotThing
                         AddItem(newItem);
 
                         twitchClient.SendMessage(e.ChatMessage.Channel,
-                            userSettings.Default.requestAdded.Parse(e.ChatMessage.Username, mainChannel.Channel,
+                            userSettings.Default.requestAdded.Parse(e.ChatMessage.DisplayName, mainChannel.Channel,
                                 listView1.Items.Count.ToString()));
                     }
                 else
                     twitchClient.SendMessage(e.ChatMessage.Channel,
-                        userSettings.Default.requestDisabled.Parse(e.ChatMessage.Username, mainChannel.Channel));
+                        userSettings.Default.requestDisabled.Parse(e.ChatMessage.DisplayName, mainChannel.Channel));
             }
 
             // !remove (mod)
@@ -302,11 +301,11 @@ namespace RequestBotThing
             // !remove (self)
             if (e.ChatMessage.Message.Equals(userSettings.Default.removeCommand) ||
                 e.ChatMessage.Message.Equals($"{userSettings.Default.removeCommand} "))
-                if (HasRequest(e.ChatMessage.Username, out var row))
+                if (HasRequest(e.ChatMessage.DisplayName, out var row))
                 {
                     DelSongRow(row);
                     twitchClient.SendMessage(mainChannel,
-                        userSettings.Default.requestRemoved.Parse(e.ChatMessage.Username, mainChannel.Channel,
+                        userSettings.Default.requestRemoved.Parse(e.ChatMessage.DisplayName, mainChannel.Channel,
                             row.ToString()));
                 }
 
