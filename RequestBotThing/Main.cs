@@ -48,10 +48,11 @@ namespace RequestBotThing
         {
             if (Settings.Default.localVersion != version)
             {
-                var changelog = $"What's new: {version}{Environment.NewLine}"
+                var changelog = $"What's new: {version}{Environment.NewLine}{Environment.NewLine}"
                                 + "- Added !update command, for mods (shows the current version and web version)."
                                 + "- Fixed a bug where users could request infinite songs if their request was being played."
-                                + "- Fixed a bug where changed requests would show the wrong number in line.";
+                                + "- Fixed a bug where changed requests would show the wrong number in line."
+                                + "- Added !pause / !unpause commands for mods.";
 
                 MessageBox.Show(changelog.Replace(".-", $".{Environment.NewLine}-"));
                 Settings.Default.localVersion = version;
@@ -328,6 +329,24 @@ namespace RequestBotThing
 
                 twitchClient.SendMessage(mainChannel,
                     $"LeafyDev's bot version: {version} | Latest version: {Updates.webVersion}");
+            }
+
+            // !pause (mod)
+            if (e.ChatMessage.Message.Equals("!pause") && e.ChatMessage.IsMod())
+            {
+                if (takingRequests)
+                    Invoke(new Action(() => button4.PerformClick()));
+                else
+                    twitchClient.SendMessage(mainChannel, "Requests are already paused.");
+            }
+
+            // !unpause (mod)
+            if (e.ChatMessage.Message.Equals("!unpause") && e.ChatMessage.IsMod())
+            {
+                if (!takingRequests)
+                    Invoke(new Action(() => button4.PerformClick()));
+                else
+                    twitchClient.SendMessage(mainChannel, "Requests are not currently paused.");
             }
         }
 
