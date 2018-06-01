@@ -8,7 +8,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -23,7 +22,7 @@ namespace RequestBotThing
 {
     internal partial class Main : Form
     {
-        private const string version = "1.8.2";
+        private const string version = "1.9";
         private static bool userDisconnect;
         private bool alertsOn;
         private JoinedChannel mainChannel;
@@ -64,27 +63,15 @@ namespace RequestBotThing
 
             LabelChange(@"Status: Checking for update...");
 
-            var webClient = new WebClient();
-            var stream = webClient.OpenRead("http://g.whaskell.pw/requestbot/latest.txt");
-            if (stream != null)
+            if (Updates.Check(version))
             {
-                var reader = new StreamReader(stream);
-                var webVersion = reader.ReadToEnd().Replace("\n", "");
-
-                // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-                if (webVersion == version)
-                {
-                    LabelChange(@"Status: No updates available.");
-                }
-                else
-                {
-                    LabelChange(@"Status: Update is available!");
-                    button5.Visible = true;
-                }
+                LabelChange(@"Status: Update is available!");
+                button5.Visible = true;
             }
             else
             {
-                LabelChange(@"Status: Failed to check for updates...");
+                LabelChange(
+                    Updates.Error ? @"Status: Failed to check for updates..." : @"Status: No updates available.");
             }
         }
 
@@ -264,9 +251,12 @@ namespace RequestBotThing
                     if (HasRequest(user, out var row))
                     {
                         ChangeSong(row, song);
+
+                        var count = Invoke(new GetRequestCountInvoker(GetRequestCount), false, row);
+
                         twitchClient.SendMessage(e.ChatMessage.Channel,
                             userSettings.Default.requestChanged.Parse(e.ChatMessage.DisplayName, mainChannel.Channel,
-                                (row + 1).ToString()));
+                                count.ToString()));
                     }
                     else
                     {
@@ -275,9 +265,11 @@ namespace RequestBotThing
 
                         AddItem(newItem);
 
+                        var count = Invoke(new GetRequestCountInvoker(GetRequestCount), true, -1);
+
                         twitchClient.SendMessage(e.ChatMessage.Channel,
                             userSettings.Default.requestAdded.Parse(e.ChatMessage.DisplayName, mainChannel.Channel,
-                                listView1.Items.Count.ToString()));
+                                count.ToString()));
                     }
                 else
                     twitchClient.SendMessage(e.ChatMessage.Channel,
@@ -327,6 +319,15 @@ namespace RequestBotThing
 
                 twitchClient.SendMessage(mainChannel, response);
             }
+
+            // !version (mod)
+            if (e.ChatMessage.Message.Equals("!version") && e.ChatMessage.IsMod())
+            {
+                Updates.Check(version);
+
+                twitchClient.SendMessage(mainChannel,
+                    $"LeafyDev's bot version: {version} | Latest version: {Updates.webVersion}");
+            }
         }
 
         private void OnJoinedChannel(object sender, OnJoinedChannelArgs e)
@@ -346,23 +347,45 @@ namespace RequestBotThing
             listView1.Invoke(new Action(() =>
             {
                 foreach (ListViewItem item in listView1.Items)
-                    if (item.SubItems[1].Text == user)
-                    {
-                        if (item.BackColor == Color.GreenYellow)
-                        {
-                            result = false;
-                            break;
-                        }
+                {
+                    if (item.BackColor == Color.GreenYellow) continue;
 
+                    if (string.Equals(item.SubItems[1].Text, user, StringComparison.CurrentCultureIgnoreCase))
+                    {
                         tmpRow = item.Index;
                         result = true;
                         break;
                     }
+                }
             }));
 
             row = tmpRow;
             tmpRow = 0;
             return result;
+        }
+
+        private int GetRequestCount(bool newRequest, int row)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new GetRequestCountInvoker(GetRequestCount), newRequest, row);
+                return -1;
+            }
+
+            var np = false;
+
+            var count = row == -1 ? listView1.Items.Count : row;
+
+            foreach (ListViewItem item in listView1.Items)
+                if (item.BackColor == Color.GreenYellow)
+                {
+                    np = true;
+                    break;
+                }
+
+            if (np) return newRequest ? count - 1 : count;
+
+            return count;
         }
 
         private void AddItem(ListViewItem itemToAdd)
@@ -442,6 +465,8 @@ namespace RequestBotThing
         private void OnTwitchHost(object sender, StreamlabsEvent<TwitchHostMessage> e) => twitchClient.SendMessage(
             mainChannel,
             userSettings.Default.newHost.Parse(e.Message[0].Name, amount: e.Message[0].Viewers));
+
+        private delegate int GetRequestCountInvoker(bool newRequest, int row);
 
         private delegate void AddItemInvoker(ListViewItem itemToAdd);
 
