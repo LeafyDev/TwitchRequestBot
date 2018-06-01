@@ -208,6 +208,7 @@
     <Compile Include="slForm.Designer.cs">
       <DependentUpon>slForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Updates.cs" />
     <Compile Include="userSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

@@ -23,7 +23,7 @@ namespace RequestBotThing
                 var reader = new StreamReader(stream);
                 webVersion = reader.ReadToEnd().Replace("\n", "");
 
-                return webVersion == version;
+                return webVersion != version;
             }
 
             Error = true;
