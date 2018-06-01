@@ -49,8 +49,9 @@ namespace RequestBotThing
             if (Settings.Default.localVersion != version)
             {
                 var changelog = $"What's new: {version}{Environment.NewLine}"
-                                + "- Unpacked the exe to be able to debug library issues."
-                                + "- Fixed capitlization of usernames.";
+                                + "- Added !update command, for mods (shows the current version and web version)."
+                                + "- Fixed a bug where users could request infinite songs if their request was being played."
+                                + "- Fixed a bug where changed requests would show the wrong number in line.";
 
                 MessageBox.Show(changelog.Replace(".-", $".{Environment.NewLine}-"));
                 Settings.Default.localVersion = version;
